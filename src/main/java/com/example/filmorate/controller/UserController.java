@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User addUser(@RequestBody User user) {
+    public User addUser(@Valid @RequestBody User user) {
         validateEmail(user.getEmail());
         if (!users.add(user)) {
             throw new UserAlreadyExistException("User with email " + user.getEmail() + " already exist");
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User updateUser(@RequestBody User user) {
+    public User updateUser(@Valid @RequestBody User user) {
         validateEmail(user.getEmail());
         users.remove(user);
         users.add(user);

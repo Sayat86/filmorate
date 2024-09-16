@@ -1,5 +1,7 @@
 package com.example.filmorate.model;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -11,11 +13,11 @@ public class User {
 //    @Email(message = "Invalid email format.")
     private String email;
 
-//    @NotNull(message = "Login cannot be null.")
+    @NotNull(message = "Login cannot be null.")
     private String login;
     private String name;
-//    @NotNull(message = "Date of birth cannot be null.")
-//    @PastOrPresent(message = "Date of birth cannot be in the future.")
+    @NotNull(message = "Date of birth cannot be null.")
+    @PastOrPresent(message = "Date of birth cannot be in the future.")
     private LocalDate birthday;
 
 
