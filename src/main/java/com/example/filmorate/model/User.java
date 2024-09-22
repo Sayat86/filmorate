@@ -1,5 +1,6 @@
 package com.example.filmorate.model;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 
 public class User {
     private int id;
-//    @Email(message = "Invalid email format.")
+    @Email(message = "Invalid email format.")
     private String email;
 
     @NotNull(message = "Login cannot be null.")
@@ -21,8 +22,7 @@ public class User {
     private LocalDate birthday;
 
 
-    public User(int id, String email, String login, String name, LocalDate birthday) {
-        this.id = id;
+    public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
         this.login = login;
         this.name = name;

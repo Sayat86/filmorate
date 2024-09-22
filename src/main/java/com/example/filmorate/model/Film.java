@@ -1,20 +1,21 @@
 package com.example.filmorate.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NonNull;
 
 import java.time.LocalDate;
 @Data
 public class Film {
     private int id;
-    @NonNull
+    @NotNull
+    @NotBlank
     private String name;
     private String description;
     private LocalDate releaseDate;
     private int duration;
 
-    public Film(int id, String name, String description, LocalDate releaseDate, int duration) {
-        this.id = id;
+    public Film(String name, String description, LocalDate releaseDate, int duration) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;

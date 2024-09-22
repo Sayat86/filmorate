@@ -1,21 +1,21 @@
 package com.example.filmorate.controller;
 
 import com.example.filmorate.exception.MaxLengthException;
-import com.example.filmorate.exception.NegativeDurationException;
 import com.example.filmorate.model.Film;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private Set<Film> films = new HashSet<>();
+    private Map<Integer, Film> films = new HashMap<>();
+    private int uniqueId = 1;
 
     @GetMapping
-    public Set<Film> findAll() {
+    public Map<Integer, Film> findAll() {
         return films;
     }
 
@@ -30,7 +30,8 @@ public class FilmController {
     @PutMapping
     public Film updateFilm(@RequestBody Film film) {
         films.remove(film);
-        films.add(film);
+        film.setId(uniqueId++);
+        films.put(film.getId(), film);
         maxDescription(film.getDescription());
         positiveDuration(film.getDuration());
         setReleaseDate(film.getReleaseDate());
@@ -45,7 +46,7 @@ public class FilmController {
 
     private void positiveDuration(int duration) {
         if (duration < 0) {
-            throw new NegativeDurationException("Продолжительность должна быть положительной");
+            throw new MaxLengthException("Продолжительность должна быть положительной");
         }
     }
 
