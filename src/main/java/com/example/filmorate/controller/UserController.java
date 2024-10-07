@@ -1,10 +1,11 @@
 package com.example.filmorate.controller;
+import com.example.filmorate.exception.NotFoundException;
 import com.example.filmorate.model.User;
 import jakarta.validation.Valid;
-import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,8 +18,8 @@ public class UserController {
     private int uniqueId = 1;
 
     @GetMapping
-    public Map<Integer, User> findAll() {
-        return users;
+    public Collection<User> findAll() {
+        return users.values();
     }
 
     @PostMapping
@@ -33,8 +34,10 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        users.remove(user);
-        user.setId(uniqueId++);
+        System.out.println(user);
+        if (!users.containsKey(user.getId())) {
+            throw new NotFoundException("Такой ID не существует");
+        }
         users.put(user.getId(), user);
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
