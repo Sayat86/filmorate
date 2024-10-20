@@ -3,43 +3,36 @@ package com.example.filmorate.controller;
 import com.example.filmorate.exception.NotFoundException;
 import com.example.filmorate.exception.ValidationException;
 import com.example.filmorate.model.Film;
+import com.example.filmorate.service.FilmService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @Validated
+@RequiredArgsConstructor
 @RequestMapping("/films")
 public class FilmController {
-    private Map<Integer, Film> films = new HashMap<>();
-    private int uniqueId = 1;
+    private final FilmService filmService;
 
-    @GetMapping
-    public Collection<Film> findAll() {
-        return films.values();
+    @GetMapping("/popular")
+    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
+        return filmService.getPopularFilms(count);
     }
 
-    @PostMapping
-    public Film addFilm(@Valid @RequestBody Film film) {
-        setReleaseDate(film.getReleaseDate());
-        film.setId(uniqueId++);
-        films.put(film.getId(), film);
-        return film;
+    @DeleteMapping("/{id}/like/{userId}")
+    public void removeLike(@PathVariable int id, @PathVariable int userId) {
+        filmService.removeLike(id, userId);
     }
 
-    @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film) {
-        if (!films.containsKey(film.getId())) {
-            throw new NotFoundException("Такой ID не существует");
-        }
-        setReleaseDate(film.getReleaseDate());
-        films.put(film.getId(), film);
-        return film;
+
+    @PutMapping("/{id}/like/{userId}")
+    public void addLike(@PathVariable int id, @PathVariable int userId) {
+        filmService.addLike(id, userId);
     }
 
 

@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 public class Film {
     private int id;
@@ -16,6 +19,8 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Must be greater than 0")
     private int duration;
+
+    private Set<Integer> likes = new HashSet<>();
 
 
 }

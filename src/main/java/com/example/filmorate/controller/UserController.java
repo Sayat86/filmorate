@@ -1,48 +1,46 @@
 package com.example.filmorate.controller;
-import com.example.filmorate.exception.NotFoundException;
 import com.example.filmorate.model.User;
-import jakarta.validation.Valid;
+import com.example.filmorate.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
 
 
 @RestController
 @Validated
 @RequestMapping("/users")
 public class UserController {
-    private Map<Integer, User> users = new HashMap<>();
-    private int uniqueId = 1;
+    private final UserService userService;
 
-    @GetMapping
-    public Collection<User> findAll() {
-        return users.values();
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @PostMapping
-    public User addUser(@Valid @RequestBody User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        user.setId(uniqueId++);
-        users.put(user.getId(), user);
-        return user;
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+        return userService.getCommonFriend(id, otherId);
     }
 
-    @PutMapping
-    public User updateUser(@Valid @RequestBody User user) {
-        System.out.println(user);
-        if (!users.containsKey(user.getId())) {
-            throw new NotFoundException("Такой ID не существует");
-        }
-        users.put(user.getId(), user);
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        return user;
+    @GetMapping("{id}/friends")
+    public Collection<User> findAllFriends(@PathVariable int id) {
+        return userService.findAllFriends(id);
+    }
+
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void removeFriend(@PathVariable int id, @PathVariable int friendId) {
+        userService.removeFriends(id, friendId);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable int id, @PathVariable int friendId) {
+        userService.addFriend(id, friendId);
     }
 
 }
