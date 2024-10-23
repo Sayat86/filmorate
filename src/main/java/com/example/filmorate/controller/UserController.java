@@ -1,14 +1,17 @@
 package com.example.filmorate.controller;
+
+import com.example.filmorate.exception.NotFoundException;
 import com.example.filmorate.model.User;
 import com.example.filmorate.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 
 
 @RestController
@@ -43,4 +46,23 @@ public class UserController {
         userService.addFriend(id, friendId);
     }
 
+    @PostMapping
+    public User create(@Valid @RequestBody User user) {
+        return userService.create(user);
+    }
+
+    @PutMapping
+    public User update(@Valid @RequestBody User user) {
+        return userService.update(user);
+    }
+
+    @GetMapping
+    public List<User> findAll() {
+        return userService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public User findById(@PathVariable int id) {
+        return userService.findById(id);
+    }
 }

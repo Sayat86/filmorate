@@ -2,6 +2,7 @@ package com.example.filmorate.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 
@@ -19,8 +20,9 @@ public class User {
     @NotBlank(message = "Login cannot be null.")
     private String login;
     private String name;
-    @NotBlank(message = "Date of birth cannot be null.")
+    @NotNull(message = "Date of birth cannot be null.")
     @PastOrPresent(message = "Date of birth cannot be in the future.")
     private LocalDate birthday;
+
     private Set<Integer> friends = new HashSet<>();
 }

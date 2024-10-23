@@ -6,12 +6,15 @@ import com.example.filmorate.model.Film;
 import com.example.filmorate.service.FilmService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @Validated
 @RequiredArgsConstructor
@@ -29,17 +32,30 @@ public class FilmController {
         filmService.removeLike(id, userId);
     }
 
-
     @PutMapping("/{id}/like/{userId}")
     public void addLike(@PathVariable int id, @PathVariable int userId) {
+        log.info("PUT /films/{}/like/{}", id, userId);
         filmService.addLike(id, userId);
     }
 
+    @PostMapping
+    public Film create(@Valid @RequestBody Film film) {
+        return filmService.create(film);
+    }
 
-    private void setReleaseDate(LocalDate releaseDate) {
-        if (releaseDate.isBefore(LocalDate.of(1895, 12, 28))) {
-            throw new ValidationException("Release date cannot be earlier than December 28, 1895");
-        }
+    @PutMapping
+    public Film update(@Valid @RequestBody Film film) {
+        return filmService.update(film);
+    }
+
+    @GetMapping
+    public List<Film> findAll() {
+        return filmService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Film findById(@PathVariable int id) {
+        return filmService.findById(id);
     }
 
 }

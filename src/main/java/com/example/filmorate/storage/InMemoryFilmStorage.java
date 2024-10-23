@@ -3,6 +3,7 @@ package com.example.filmorate.storage;
 import com.example.filmorate.exception.NotFoundException;
 import com.example.filmorate.exception.ValidationException;
 import com.example.filmorate.model.Film;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class InMemoryFilmStorage implements FilmStorage{
     private final Map<Integer, Film> films = new HashMap<>();
     private int uniqueId = 1;
