@@ -1,6 +1,5 @@
 package com.example.filmorate.controller;
 
-import com.example.filmorate.exception.NotFoundException;
 import com.example.filmorate.model.User;
 import com.example.filmorate.service.UserService;
 import jakarta.validation.Valid;
@@ -8,11 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 
 @RestController
 @Validated
@@ -34,7 +30,6 @@ public class UserController {
     public Collection<User> findAllFriends(@PathVariable int id) {
         return userService.findAllFriends(id);
     }
-
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public void removeFriend(@PathVariable int id, @PathVariable int friendId) {

@@ -42,7 +42,6 @@ public class FilmService {
         return film;
     }
 
-
     public void addLike(int filmId, int userId) {
         Film film = findById(filmId);
         User user = userStorage.findById(userId);

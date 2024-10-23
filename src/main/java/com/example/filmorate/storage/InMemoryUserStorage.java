@@ -1,7 +1,6 @@
 package com.example.filmorate.storage;
 
 import com.example.filmorate.exception.NotFoundException;
-import com.example.filmorate.model.Film;
 import com.example.filmorate.model.User;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
 
     private final Map<Integer, User> users = new HashMap<>();
     private int uniqueId = 1;

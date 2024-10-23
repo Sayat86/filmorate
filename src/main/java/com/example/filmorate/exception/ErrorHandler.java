@@ -18,5 +18,4 @@ public class ErrorHandler {
     public ErrorResponse handleIncorrectNotUser(final NotFoundException e) {
         return new ErrorResponse("Такой ID не существует", e.getMessage());
     }
-
 }

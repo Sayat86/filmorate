@@ -1,7 +1,6 @@
 package com.example.filmorate.controller;
 
-import com.example.filmorate.exception.NotFoundException;
-import com.example.filmorate.exception.ValidationException;
+
 import com.example.filmorate.model.Film;
 import com.example.filmorate.service.FilmService;
 import jakarta.validation.Valid;
@@ -9,9 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j

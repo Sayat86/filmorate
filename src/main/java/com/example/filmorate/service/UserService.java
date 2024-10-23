@@ -69,5 +69,4 @@ public class UserService {
                 .map(userStorage::findById)
                 .collect(Collectors.toList());
     }
-
 }

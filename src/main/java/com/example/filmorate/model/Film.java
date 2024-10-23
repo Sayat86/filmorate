@@ -14,13 +14,12 @@ public class Film {
     private int id;
     @NotBlank(message = "Поле не должно быть пустым")
     private String name;
-    @Size(max = 200)
+    @Size(max = 200, message = "Длина не может превышать 200 символов")
     private String description;
     private LocalDate releaseDate;
     @Positive(message = "Must be greater than 0")
     private int duration;
 
-    private Set<Integer> likes = new HashSet<>();
-
+    private final Set<Integer> likes = new HashSet<>();
 
 }
