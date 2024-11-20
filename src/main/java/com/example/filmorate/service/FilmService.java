@@ -1,13 +1,16 @@
 package com.example.filmorate.service;
 
 import com.example.filmorate.exception.NotFoundException;
+import com.example.filmorate.exception.ValidationException;
 import com.example.filmorate.model.Film;
+import com.example.filmorate.model.Genre;
 import com.example.filmorate.model.User;
 import com.example.filmorate.storage.FilmStorage;
 import com.example.filmorate.storage.UserStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,10 +26,17 @@ public class FilmService {
     }
 
     public Film create(Film film) {
+        setReleaseDate(film.getReleaseDate());
+        for (Genre genre : film.getGenres()) {
+            // TODO: проверить находится айди жанра от 1 до 6
+            // если не находится выброс исключения ValidationException
+        }
         return filmStorage.create(film);
     }
 
     public Film update(Film film) {
+        int filmId = film.getId();
+        findById(filmId);
         return filmStorage.update(film);
     }
 
@@ -48,7 +58,7 @@ public class FilmService {
         if (user == null) {
             throw new NotFoundException("Пользователь с таким ID не найден");
         }
-        film.getLikes().add(userId);
+//        film.getLikes().add(userId);
     }
 
     public void removeLike(int filmId, int userId) {
@@ -57,13 +67,19 @@ public class FilmService {
         if (user == null) {
             throw new NotFoundException("Пользователь с таким ID не найден");
         }
-        film.getLikes().remove(userId);
+//        film.getLikes().remove(userId);
     }
 
     public List<Film> getPopularFilms(int count) {
         return filmStorage.findAll().stream()
-                .sorted((film1, film2) -> Integer.compare(film2.getLikes().size(), film1.getLikes().size()))
+//                .sorted((film1, film2) -> Integer.compare(film2.getLikes().size(), film1.getLikes().size()))
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    private void setReleaseDate(LocalDate releaseDate) {
+        if (releaseDate.isBefore(LocalDate.of(1895, 12, 28))) {
+            throw new ValidationException("Release date cannot be earlier than December 28, 1895");
+        }
     }
 }

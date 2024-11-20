@@ -23,6 +23,8 @@ public class UserService {
     }
 
     public User update(User user) {
+        int userId = user.getId();
+        findById(userId);
         return userStorage.update(user);
     }
 
@@ -39,34 +41,30 @@ public class UserService {
     }
 
     public void addFriend(int userId, int friendId) {
-        User user = findById(userId);
-        User friend = findById(friendId);
-        user.getFriends().add(friendId);
-        friend.getFriends().add(userId);
+        findById(userId);
+        findById(friendId);
+        userStorage.addFriend(userId, friendId);
     }
 
     public void removeFriends(int userId, int friendId) {
-        User user = findById(userId);
-        User friend = findById(friendId);
-        user.getFriends().remove(friendId);
-        friend.getFriends().remove(userId);
+        findById(userId);
+        findById(friendId);
+        userStorage.removeFriend(userId, friendId);
     }
 
     public List<User> getCommonFriend(int userId, int otherId) {
-        User user = findById(userId);
-        User other = findById(otherId);
-
-        return user.getFriends().stream()
-                .filter(other.getFriends()::contains)
-                .map(userStorage::findById)// Ищем общие ID друзей
-                .collect(Collectors.toList()); // Преобразуем ID в объекты User
+//        User user = findById(userId);
+//        User other = findById(otherId);
+//
+//        return user.getFriends().stream()
+//                .filter(other.getFriends()::contains)
+//                .map(userStorage::findById)// Ищем общие ID друзей
+//                .collect(Collectors.toList()); // Преобразуем ID в объекты User
+        return null;
     }
 
     public List<User> findAllFriends(int id) {
-        User user = findById(id);
-        return user.getFriends().stream()
-                .filter(user.getFriends()::contains)
-                .map(userStorage::findById)
-                .collect(Collectors.toList());
+        findById(id);
+        return userStorage.findAllFriends(id);
     }
 }

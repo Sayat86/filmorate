@@ -2,7 +2,7 @@ package com.example.filmorate.controller;
 
 import com.example.filmorate.exception.ValidationException;
 import com.example.filmorate.model.Film;
-import com.example.filmorate.storage.InMemoryFilmStorage;
+import com.example.filmorate.storage.impl.FilmDbStorage;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.Assertions;
@@ -25,7 +25,7 @@ class FilmControllerTest {
         film.setDuration(60);
         String expected2 = "Release date cannot be earlier than December 28, 1895";
 
-        InMemoryFilmStorage filmStorage = new InMemoryFilmStorage();
+        FilmDbStorage filmStorage = new FilmDbStorage();
         Executable executable = () -> filmStorage.create(film);
 
         ValidationException ex = assertThrows(ValidationException.class, executable);
