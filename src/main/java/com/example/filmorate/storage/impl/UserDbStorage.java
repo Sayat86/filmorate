@@ -84,10 +84,10 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> findAllCommonFriends(int userId, int friendId) {
         String sql = "select * from users u  " +
-                "join friendships f1 on (u.id = f1.friendId) " +
-                "join friendships f2 on (u.id = f2.friendId) " +
-                "where f1.userId = ? and f2.userId = ? " +
-                "and f1.friendId = f2.friendId";
+                "join friendships f1 on (u.id = f1.user2_id) " +
+                "join friendships f2 on (u.id = f2.user2_id) " +
+                "where f1.user_id = ? and f2.user_id = ? " +
+                "and f1.user2_id = f2.user2_id";
         return jdbcTemplate.query(sql, this::rowMapper, userId, friendId);
     }
 

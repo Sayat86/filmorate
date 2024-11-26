@@ -3,6 +3,7 @@ package com.example.filmorate.storage.impl;
 import com.example.filmorate.exception.NotFoundException;
 import com.example.filmorate.exception.ValidationException;
 import com.example.filmorate.model.Film;
+import com.example.filmorate.model.Genre;
 import com.example.filmorate.model.Mpa;
 import com.example.filmorate.storage.FilmStorage;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
+    private final GenreDbStorage genreDbStorage;
 
     private static final String SELECT = """
             select f.id as film_id,
@@ -48,6 +50,11 @@ public class FilmDbStorage implements FilmStorage {
                 "mpa_id", mpaId);
         int id = insert.executeAndReturnKey(map).intValue();
         film.setId(id);
+
+        for (Genre genre : film.getGenres()) {
+            String sql = "insert into film_genres(film_id, genre_id) values (?, ?)";
+            jdbcTemplate.update(sql, film.getId(), genre.getId());
+        }
         return film;
     }
 
@@ -65,7 +72,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> findAll() {
-        return jdbcTemplate.query(SELECT, this::rowMapper);
+        return jdbcTemplate.query(SELECT+" order by f.id", this::rowMapper);
     }
 
     @Override
@@ -90,7 +97,12 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> findAllPopular(int count) {
-        return List.of();
+        String sql = SELECT + """
+                 left join likes l on f.id = l.film_id
+                group by f.id, m.name
+                order by count(l.film_id) desc
+                limit ?""";
+        return jdbcTemplate.query(sql, this::rowMapper, count);
     }
 
     private Film rowMapper(ResultSet rs, int rowNum) throws SQLException {
@@ -103,6 +115,10 @@ public class FilmDbStorage implements FilmStorage {
         int mpaId = rs.getInt("mpa_id");
         String mpaName = rs.getString("mpa_name");
         Mpa mpa = new Mpa(mpaId, mpaName);
-        return new Film(id, name, description, releaseDate, duration, mpa);
+
+        List<Genre> genreList = genreDbStorage.findAllByFilmId(id);
+        Film film = new Film(id, name, description, releaseDate, duration, mpa);
+        film.getGenres().addAll(genreList);
+        return film;
     }
 }

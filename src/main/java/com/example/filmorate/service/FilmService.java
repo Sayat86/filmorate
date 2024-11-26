@@ -28,6 +28,9 @@ public class FilmService {
     public Film create(Film film) {
         setReleaseDate(film.getReleaseDate());
         for (Genre genre : film.getGenres()) {
+            if (genre.getId() > 6 || genre.getId() < 1) {
+                throw new ValidationException("Жанр с таким ID не найден");
+            }
             // TODO: проверить находится айди жанра от 1 до 6
             // если не находится выброс исключения ValidationException
         }
@@ -55,10 +58,7 @@ public class FilmService {
     public void addLike(int filmId, int userId) {
         Film film = findById(filmId);
         User user = userStorage.findById(userId);
-        if (user == null) {
-            throw new NotFoundException("Пользователь с таким ID не найден");
-        }
-//        film.getLikes().add(userId);
+        filmStorage.addLike(userId, filmId);
     }
 
     public void removeLike(int filmId, int userId) {
@@ -67,14 +67,11 @@ public class FilmService {
         if (user == null) {
             throw new NotFoundException("Пользователь с таким ID не найден");
         }
-//        film.getLikes().remove(userId);
+        filmStorage.removeLike(userId, filmId);
     }
 
     public List<Film> getPopularFilms(int count) {
-        return filmStorage.findAll().stream()
-//                .sorted((film1, film2) -> Integer.compare(film2.getLikes().size(), film1.getLikes().size()))
-                .limit(count)
-                .collect(Collectors.toList());
+        return filmStorage.findAllPopular(count);
     }
 
     private void setReleaseDate(LocalDate releaseDate) {

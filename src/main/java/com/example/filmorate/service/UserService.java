@@ -53,14 +53,10 @@ public class UserService {
     }
 
     public List<User> getCommonFriend(int userId, int otherId) {
-//        User user = findById(userId);
-//        User other = findById(otherId);
-//
-//        return user.getFriends().stream()
-//                .filter(other.getFriends()::contains)
-//                .map(userStorage::findById)// Ищем общие ID друзей
-//                .collect(Collectors.toList()); // Преобразуем ID в объекты User
-        return null;
+        User user = findById(userId);
+        User other = findById(otherId);
+
+        return userStorage.findAllCommonFriends(userId, otherId);
     }
 
     public List<User> findAllFriends(int id) {

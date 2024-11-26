@@ -31,6 +31,16 @@ public class GenreDbStorage implements GenreStorage {
                 .orElseThrow(() -> new NotFoundException("Жанр с id=%s не найден".formatted(id)));
     }
 
+    @Override
+    public List<Genre> findAllByFilmId(int filmId) {
+        String sql = """
+                select g.*
+                from genres g
+                join public.film_genres fg on g.id = fg.genre_id
+                where fg.film_id = ?""";
+        return jdbcTemplate.query(sql, this::rowMapper, filmId);
+    }
+
     private Genre rowMapper(ResultSet rs, int rowNum) throws SQLException {
         int id = rs.getInt("id");
         String name = rs.getString("name");
